@@ -1,91 +1,82 @@
 #include "sort.h"
 
 /**
- * _bigest - Returns the largest number in an array of integers
- * @a: The integer array
- * @size: Size of the array
- * Return: The largest number
+ * quick_sort - a function that sorts an array of integers in ascending order
+ *          using quick sort algorithm.
+ *
+ * @array: array of integers to sort.
+ * @size: size of the array to sort.
  */
-int _bigest(int *a, size_t size)
+
+void quick_sort(int *array, size_t size)
 {
-	size_t i;
-	int k = 0;
-
-	for (i = 0; i < size; i++)
-	{
-		if (k < a[i])
-			k = a[i];
-	}
-
-	return (k);
+	if (array == NULL || size < 2)
+		return;
+	quicksort_helper(array, 0, size - 1, size);
 }
 
 /**
- * _memset - Creates the integer array and initializes all elements to 0
- * @size: Size of the array
- *  Return: The integer array
+ * quicksort_helper - helper function for quick_sort that sorts an array
+ * using lumoto_partition scheme and recursively calls to quick_sort helper.
+ * @array: array to sort.
+ * @low: the lowest index of the partition.
+ * @high: the highest index of the partition.
+ * @size: size of the array.
+ *
+ * Return: void
  */
-int *_memset(int size)
+
+void quicksort_helper(int *array, int low, int high, size_t size)
 {
-	int *ptr = NULL;
-	int i;
+	int pivot_index;
 
-	ptr = malloc(size * sizeof(int));
-
-	if (ptr != NULL)
+	if (low < high)
 	{
-		for (i = 0; i < size; i++)
-			ptr[i] = 0;
+		pivot_index = lomuto_partition(array, low, high, size);
+		quicksort_helper(array, low, pivot_index - 1, size);
+		quicksort_helper(array, pivot_index + 1, high, size);
 	}
-
-	return (ptr);
 }
 
 /**
- * counting_sort - Sorts the arrays of the integers using the counting sort algorithm
- * @array: The integer array to be sorted
- * @size: The size of array
+ * lomuto_partition - finds the partition index of an array
+ *         using the lomuto partition scheme.
+ * @array: the array of integers to partition.
+ * @low: the lowest index of the partition.
+ * @high: the highest index of the partition.
+ * @size: size of the array.
+ *
+ * Return: index of the pivot element.
  */
-void counting_sort(int *array, size_t size)
+
+int lomuto_partition(int *array, int low, int high, size_t size)
 {
-	size_t i, j;
-	int max = 0;
-	int *count_array = NULL, *sorted_array = NULL;
-	
-	if (size < 2)
-		return;
-	
-	max = _bigest(array, size);
-	
-	count_array = _memset(max + 1);
-	
-	if (count_array == NULL)
-		return;
+	int pivot = array[high];
+	int i = low - 1, j;
+	int temp = 0;
 
-	for (i = 0; i < size; i++)
-		count_array[array[i]]++;
-
-	for (i = 1; i <= (size_t) max; i++)
-		count_array[i] += count_array[i - 1];
-	print_array(count_array, max + 1);
-
-	sorted_array = malloc(size * sizeof(int));
-
-	if (sorted_array == NULL)
+	for (j = low; j < high; j++)
 	{
-		free(count_array);
-		return;
+		if (array[j] < pivot)
+		{
+			i++;
+			if (array[i] != array[j])
+			{
+				temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
+				print_array(array, size);
+			}
+		}
 	}
 
-	for (i = 0; i < size; i++)
+	if (array[i + 1] != array[high])
 	{
-		sorted_array[count_array[array[i]] - 1] = array[i];
-		count_array[array[i]]--;
+		temp = array[i + 1];
+		array[i + 1] = array[high];
+		array[high] = temp;
+		print_array(array, size);
 	}
 
-	for (j = 0; j < size; j++)
-		array[j] = sorted_array[j];
-
-	free(sorted_array);
-	free(count_array);
+	return (i + 1);
 }
