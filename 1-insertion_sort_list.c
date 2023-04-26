@@ -1,9 +1,9 @@
 #include "sort.h"
 
 /**
- * insertion_sort_list - Sorts doubly linked list of the integers in an ascending
- *         order using the Insertion sort algorithm
- * @list: A pointer to the head of a doubly linked list
+ * insertion_sort_list - Sorts a doubly linked list of integers in ascending
+ *                         order using the Insertion sort algorithm
+ * @list: A pointer to the head of the doubly linked list
  */
 void insertion_sort_list(listint_t **list)
 {
